@@ -36,6 +36,50 @@
         </div>
 
         <div class="form-group">
+          <label>SQL dialect</label>
+          <div class="dialect-selector">
+            <label class="dialect-option">
+              <input type="radio" name="dialect" value="sqlite" checked />
+              <div class="dialect-option-card">
+                <span class="dialect-name">SQLite</span>
+              </div>
+            </label>
+            <label class="dialect-option">
+              <input type="radio" name="dialect" value="mysql" />
+              <div class="dialect-option-card">
+                <span class="dialect-name">MySQL</span>
+              </div>
+            </label>
+            <label class="dialect-option">
+              <input type="radio" name="dialect" value="postgresql" />
+              <div class="dialect-option-card">
+                <span class="dialect-name">PostgreSQL</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Exercise order</label>
+          <div class="order-toggle">
+            <label class="order-option">
+              <input type="radio" name="order_mode" value="sequential" checked />
+              <div class="order-option-card">
+                <span class="order-name">⇢ In order</span>
+                <span class="order-desc">simple → complex</span>
+              </div>
+            </label>
+            <label class="order-option">
+              <input type="radio" name="order_mode" value="random" />
+              <div class="order-option-card">
+                <span class="order-name">⚄ Random</span>
+                <span class="order-desc">shuffled each time</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
           <label>How many tables do you want to work with?</label>
           <div class="table-selector">
             {% set table_info = [
@@ -62,12 +106,13 @@
 
         <button type="submit" class="btn-start">Start Training →</button>
       </form>
+      <button class="btn-shutdown-welcome" onclick="shutdownServer()">■ Stop server</button>
     </div>
 
     <!-- ── RIGHT: what you'll practice ─────────── -->
     <div class="info-panel">
       <h2 class="info-title">What you'll practice</h2>
-      <p class="info-subtitle">90 exercises covering all core SQL operators</p>
+      <p class="info-subtitle"><span id="exerciseCount">{{ exercise_counts[2] }}</span> exercises covering all core SQL operators</p>
 
       <div class="info-list">
         <div class="info-item">
@@ -125,5 +170,13 @@
   </div><!-- .welcome-wrap -->
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    const EXERCISE_COUNTS = {{ exercise_counts | tojson }};
+    document.querySelectorAll('input[name="table_count"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.getElementById('exerciseCount').textContent = EXERCISE_COUNTS[radio.value];
+      });
+    });
+  </script>
 </body>
 </html>

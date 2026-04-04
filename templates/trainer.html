@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SQL Trainer — {{ name }}</title>
 
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <!-- CodeMirror -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/display/placeholder.min.css" />
 
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
@@ -26,9 +28,11 @@
       <span class="progress-label">{{ exercise_index }} / {{ total_exercises }}</span>
     </div>
     <div class="topbar-right">
+      <span class="dialect-badge dialect-{{ dialect }}">{{ dialect|upper }}</span>
       <span class="score-item score-correct" title="Correct answers">✓ {{ score.correct }}</span>
       <span class="score-item score-revealed" title="Answers revealed">👁 {{ score.revealed }}</span>
       <a href="/" class="btn-small">← Restart</a>
+      <button class="btn-small btn-shutdown" onclick="shutdownServer()">■ Stop server</button>
     </div>
   </header>
 
@@ -75,17 +79,16 @@
 
       <!-- Category badge + hint toggle -->
       <div class="exercise-header">
-        <span class="category-badge">{{ exercise.category }}</span>
 
         {% if exercise.get('needs_reset') %}
         <span class="dml-badge">⚠ DML — data is reset before each check</span>
         {% endif %}
 
-        <!-- Hint is hidden behind this button -->
+        <!-- Category badge is hidden behind this button -->
         <button class="btn-hint-toggle" id="hintToggle" onclick="toggleHint()">
           💡 Show hint
         </button>
-        <span class="hint-badge hidden" id="hintBadge">{{ exercise.hint }}</span>
+        <span class="category-badge hidden" id="hintBadge">{{ exercise.category }}</span>
       </div>
 
       <!-- Task description -->
@@ -133,7 +136,6 @@
       <div id="answerZone" class="answer-zone hidden">
         <div class="answer-label">Correct answer:</div>
         <textarea id="answerEditor" readonly></textarea>
-        <button class="btn-next btn-next-answer" onclick="nextExercise()">Next Exercise →</button>
       </div>
 
     </div>
@@ -142,6 +144,7 @@
   <!-- ── SCRIPTS ────────────────────────────────── -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/display/placeholder.min.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 
   <script>

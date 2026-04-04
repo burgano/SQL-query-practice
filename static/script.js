@@ -65,11 +65,11 @@ async function checkAnswer() {
       body: JSON.stringify({ query, exercise_id: EXERCISE_ID }),
     });
     const data = await res.json();
+    setLoading(false);
     showResult(data);
   } catch (e) {
-    showResult({ correct: false, error: 'Connection error' });
-  } finally {
     setLoading(false);
+    showResult({ correct: false, error: 'Connection error' });
   }
 }
 
@@ -94,14 +94,41 @@ function showResult(data) {
     document.getElementById('successText').textContent = getCompliment(USER_NAME);
     success.classList.remove('hidden');
     confetti();
+    // Disable Check Result and auto-advance after 1 s
+    const btnCheck = document.getElementById('btnCheck');
+    btnCheck.disabled = true;
+    btnCheck.textContent = 'Next in 1s…';
+    setTimeout(nextExercise, 1000);
   } else {
     errBlock.classList.remove('hidden');
   }
 }
 
-// ── Show answer ───────────────────────────────────────
+// ── Show / hide answer toggle ─────────────────────────
+let _answerLoaded = false;
+
 async function showAnswer() {
-  const btn = document.getElementById('btnReveal');
+  const btn  = document.getElementById('btnReveal');
+  const zone = document.getElementById('answerZone');
+
+  // If already visible — hide it
+  if (!zone.classList.contains('hidden')) {
+    zone.classList.add('hidden');
+    btn.textContent = '👁 Reveal Answer';
+    return;
+  }
+
+  // If already fetched — just show again
+  if (_answerLoaded) {
+    zone.classList.remove('hidden');
+    setTimeout(() => {
+      answerEditor.refresh();
+      zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 30);
+    btn.textContent = '🙈 Hide Answer';
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = '👁 Loading...';
 
@@ -113,17 +140,21 @@ async function showAnswer() {
     });
     const data = await res.json();
     if (data.solution) {
-      const zone = document.getElementById('answerZone');
-      zone.classList.remove('hidden');
       answerEditor.setValue(data.solution);
-      answerEditor.refresh();
-      zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      zone.classList.remove('hidden');
+      // CodeMirror needs a tick after element becomes visible to render correctly
+      setTimeout(() => {
+        answerEditor.refresh();
+        zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 30);
+      _answerLoaded = true;
+      btn.textContent = '🙈 Hide Answer';
     }
   } catch (e) {
     console.error('show answer error', e);
+    btn.textContent = '👁 Reveal Answer';
   } finally {
     btn.disabled = false;
-    btn.textContent = '👁 Reveal Answer';
   }
 }
 
@@ -184,6 +215,15 @@ function flashEmpty() {
   if (!cm) return;
   cm.style.borderColor = 'var(--error)';
   setTimeout(() => { cm.style.borderColor = ''; }, 800);
+}
+
+// ── Shutdown server ───────────────────────────────────
+async function shutdownServer() {
+  if (!confirm('Stop the server?')) return;
+  try {
+    await fetch('/shutdown', { method: 'POST' });
+  } catch (_) {}
+  document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;font-size:1.2rem;color:#8888aa;">Server stopped. You can close this tab.</div>';
 }
 
 // ── Mini confetti ─────────────────────────────────────

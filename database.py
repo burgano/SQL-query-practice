@@ -140,9 +140,15 @@ SERVICE_REQUESTS_DATA = [
 ]
 
 
+def _concat_func(*args):
+    """SQLite UDF that emulates MySQL's CONCAT() — ignores NULL args."""
+    return ''.join('' if a is None else str(a) for a in args)
+
+
 def get_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.create_function('CONCAT', -1, _concat_func)
     return conn
 
 
