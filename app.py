@@ -162,6 +162,13 @@ def reset_database():
     return jsonify({'ok': True})
 
 
+@app.route('/shutdown', methods=['POST'])
+def shutdown():
+    import os, signal, threading
+    threading.Thread(target=lambda: os.kill(os.getpid(), signal.SIGTERM)).start()
+    return 'Server stopped. You can close this tab.'
+
+
 # ──────────────────────────────────────────────
 # Answer checking logic
 # ──────────────────────────────────────────────

@@ -217,6 +217,15 @@ function flashEmpty() {
   setTimeout(() => { cm.style.borderColor = ''; }, 800);
 }
 
+// ── Shutdown server ───────────────────────────────────
+async function shutdownServer() {
+  if (!confirm('Stop the server?')) return;
+  try {
+    await fetch('/shutdown', { method: 'POST' });
+  } catch (_) {}
+  document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;font-size:1.2rem;color:#8888aa;">Server stopped. You can close this tab.</div>';
+}
+
 // ── Mini confetti ─────────────────────────────────────
 function confetti() {
   const colors = ['#4fc3f7', '#7c6af7', '#4caf80', '#ffa726', '#ef5350'];

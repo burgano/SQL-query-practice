@@ -4,14 +4,40 @@
 
 ## Быстрый старт
 
+**Требования:** Python 3.8+ ([python.org](https://www.python.org/downloads/))
+
 ```bash
 git clone https://github.com/YOUR_USERNAME/sql-query-practice.git
 cd sql-query-practice
-pip install -r requirements.txt
-python app.py
 ```
 
+**macOS / Linux:**
+```bash
+bash run.sh
+```
+
+**Windows:**
+```bat
+run.bat
+```
+
+Скрипт автоматически создаст виртуальное окружение, установит зависимости и запустит сервер.
+
 Браузер откроется автоматически на `http://127.0.0.1:5000`
+
+Чтобы остановить сервер — нажми кнопку **■ Stop server** на любой странице приложения. После этого можно закрыть вкладку.
+
+> **Ошибка "Port 5000 is in use"?**
+> Останови процесс, который занимает порт:
+> ```bash
+> # macOS / Linux
+> lsof -ti:5000 | xargs kill -9
+>
+> # Windows
+> netstat -ano | findstr :5000
+> taskkill /PID <номер_из_предыдущей_команды> /F
+> ```
+> Если порт занимает AirPlay Receiver — отключи его: **System Settings → General → AirDrop & Handoff → AirPlay Receiver → выключить**.
 
 ## Что внутри
 

@@ -387,6 +387,23 @@ h1 {
   transition: border-color 0.2s, color 0.2s;
 }
 .btn-small:hover { border-color: var(--accent); color: var(--accent); }
+.btn-shutdown { color: var(--error) !important; border-color: var(--error) !important; }
+.btn-shutdown:hover { background: rgba(239,83,80,0.1) !important; }
+
+.btn-shutdown-welcome {
+  margin-top: 0.75rem;
+  width: 100%;
+  background: none;
+  border: 1px solid var(--error);
+  border-radius: var(--radius-sm);
+  color: var(--error);
+  font-size: 0.8rem;
+  padding: 0.4rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.btn-shutdown-welcome:hover { opacity: 1; }
 
 /* ── Tables panel (sticky) ── */
 .tables-panel {
