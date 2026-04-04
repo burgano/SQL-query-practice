@@ -1,0 +1,220 @@
+/* =====================================================
+   SQL Trainer — Client-side Logic
+   ===================================================== */
+
+'use strict';
+
+// ── Personalized compliments ──────────────────────────
+const COMPLIMENTS = [
+  "You're a legend",
+  "You're a star",
+  "You're a genius",
+  "You're a champion",
+  "You're a hero",
+  "You're a lifesaver",
+  "You're a rockstar",
+  "You're a superstar",
+  "You're a beast",
+  "You're a machine",
+  "You're a wizard",
+  "You're a magician",
+  "You're the GOAT",
+  "You're so amazing",
+  "You're so awesome",
+  "You're so brilliant",
+  "You're so incredible",
+  "You're so fantastic",
+  "You're unreal",
+  "You're unbelievable",
+  "You're on fire",
+];
+
+function getCompliment(name) {
+  const msg = COMPLIMENTS[Math.floor(Math.random() * COMPLIMENTS.length)];
+  return `${msg}, ${name}! 🎉`;
+}
+
+// ── Panel toggle ──────────────────────────────────────
+function togglePanel() {
+  const panel     = document.getElementById('tablesPanel');
+  const btn       = document.getElementById('panelToggle');
+  const collapsed = panel.classList.toggle('collapsed');
+  btn.textContent = collapsed ? '▼ Tables' : '▲';
+}
+
+// ── Hint toggle ───────────────────────────────────────
+function toggleHint() {
+  const badge  = document.getElementById('hintBadge');
+  const btn    = document.getElementById('hintToggle');
+  const hidden = badge.classList.toggle('hidden');
+  btn.textContent = hidden ? '💡 Show hint' : '💡 Hide hint';
+}
+
+// ── Check answer ──────────────────────────────────────
+async function checkAnswer() {
+  const query = editor.getValue().trim();
+  if (!query) { flashEmpty(); return; }
+
+  setLoading(true);
+  hideResult();
+
+  try {
+    const res  = await fetch('/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, exercise_id: EXERCISE_ID }),
+    });
+    const data = await res.json();
+    showResult(data);
+  } catch (e) {
+    showResult({ correct: false, error: 'Connection error' });
+  } finally {
+    setLoading(false);
+  }
+}
+
+function showResult(data) {
+  const zone        = document.getElementById('resultZone');
+  const success     = document.getElementById('resultSuccess');
+  const errBlock    = document.getElementById('resultError');
+  const sqlErrBlock = document.getElementById('resultSqlError');
+
+  zone.classList.remove('hidden');
+  success.classList.add('hidden');
+  errBlock.classList.add('hidden');
+  sqlErrBlock.classList.add('hidden');
+
+  if (data.error) {
+    document.getElementById('sqlErrorText').textContent = data.error;
+    sqlErrBlock.classList.remove('hidden');
+    return;
+  }
+
+  if (data.correct) {
+    document.getElementById('successText').textContent = getCompliment(USER_NAME);
+    success.classList.remove('hidden');
+    confetti();
+  } else {
+    errBlock.classList.remove('hidden');
+  }
+}
+
+// ── Show answer ───────────────────────────────────────
+async function showAnswer() {
+  const btn = document.getElementById('btnReveal');
+  btn.disabled = true;
+  btn.textContent = '👁 Loading...';
+
+  try {
+    const res  = await fetch('/show-answer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ exercise_id: EXERCISE_ID }),
+    });
+    const data = await res.json();
+    if (data.solution) {
+      const zone = document.getElementById('answerZone');
+      zone.classList.remove('hidden');
+      answerEditor.setValue(data.solution);
+      answerEditor.refresh();
+      zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  } catch (e) {
+    console.error('show answer error', e);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '👁 Reveal Answer';
+  }
+}
+
+// ── Next exercise ─────────────────────────────────────
+async function nextExercise() {
+  try {
+    await fetch('/next', { method: 'POST' });
+  } catch (_) {}
+  window.location.href = '/trainer';
+}
+
+// ── Skip ──────────────────────────────────────────────
+function skipExercise() {
+  nextExercise();
+}
+
+// ── Clear editor ──────────────────────────────────────
+function clearEditor() {
+  editor.setValue('');
+  editor.focus();
+  hideResult();
+}
+
+function hideResult() {
+  document.getElementById('resultZone').classList.add('hidden');
+  document.getElementById('answerZone').classList.add('hidden');
+}
+
+// ── Reset DB ──────────────────────────────────────────
+async function resetDb() {
+  const btn  = document.querySelector('.btn-reset-db');
+  const orig = btn.textContent;
+  btn.textContent = '↺ Resetting...';
+  btn.disabled    = true;
+  try {
+    await fetch('/reset-db', { method: 'POST' });
+    window.location.reload();
+  } catch (e) {
+    btn.textContent = orig;
+    btn.disabled    = false;
+  }
+}
+
+// ── Loading state ─────────────────────────────────────
+function setLoading(on) {
+  const btn = document.getElementById('btnCheck');
+  if (on) {
+    btn.textContent = 'Checking...';
+    btn.disabled    = true;
+  } else {
+    btn.textContent = 'Check Result';
+    btn.disabled    = false;
+  }
+}
+
+function flashEmpty() {
+  const cm = document.querySelector('.editor-wrap .CodeMirror');
+  if (!cm) return;
+  cm.style.borderColor = 'var(--error)';
+  setTimeout(() => { cm.style.borderColor = ''; }, 800);
+}
+
+// ── Mini confetti ─────────────────────────────────────
+function confetti() {
+  const colors = ['#4fc3f7', '#7c6af7', '#4caf80', '#ffa726', '#ef5350'];
+  for (let i = 0; i < 40; i++) {
+    const el = document.createElement('div');
+    const rot = (Math.random() > 0.5 ? '' : '-') + Math.round(Math.random() * 360) + 'deg';
+    el.style.cssText = `
+      position:fixed;
+      top:${Math.random() * 50}%;
+      left:${Math.random() * 100}%;
+      width:${6 + Math.round(Math.random() * 6)}px;
+      height:${6 + Math.round(Math.random() * 6)}px;
+      border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+      background:${colors[Math.floor(Math.random() * colors.length)]};
+      pointer-events:none;
+      z-index:9999;
+      animation: confettiFall ${0.7 + Math.random() * 1.2}s ease forwards;
+      --rot: ${rot};
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2200);
+  }
+}
+
+const _style = document.createElement('style');
+_style.textContent = `
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(130px) rotate(var(--rot, 360deg)); opacity: 0; }
+  }
+`;
+document.head.appendChild(_style);

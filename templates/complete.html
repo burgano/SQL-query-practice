@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SQL Trainer — Done!</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body class="welcome-page">
+  <div class="welcome-card" style="text-align:center;">
+    <div class="logo">
+      <span class="logo-bracket">{</span>
+      <span class="logo-text">SQL</span>
+      <span class="logo-bracket">}</span>
+    </div>
+    <h1>🎉 You did it, {{ name }}!</h1>
+    <p class="subtitle">You completed all exercises!</p>
+
+    <div class="complete-stats">
+      <div class="stat-block">
+        <div class="stat-num">{{ total }}</div>
+        <div class="stat-label">Exercises</div>
+      </div>
+      <div class="stat-block stat-green">
+        <div class="stat-num">{{ score.correct }}</div>
+        <div class="stat-label">Correct</div>
+      </div>
+      <div class="stat-block stat-yellow">
+        <div class="stat-num">{{ score.revealed }}</div>
+        <div class="stat-label">Revealed</div>
+      </div>
+    </div>
+
+    <a href="/" class="btn-start" style="display:inline-block;text-decoration:none;margin-top:2rem;">
+      Start Again →
+    </a>
+  </div>
+</body>
+</html>

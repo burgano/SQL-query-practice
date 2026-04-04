@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL Trainer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body class="welcome-page">
+
+  <div class="welcome-wrap">
+
+    <!-- ── LEFT: form ───────────────────────────── -->
+    <div class="welcome-card">
+      <div class="logo">
+        <span class="logo-bracket">{</span>
+        <span class="logo-text">SQL</span>
+        <span class="logo-bracket">}</span>
+      </div>
+      <h1>SQL Trainer</h1>
+      <p class="subtitle">Practice SQL queries on real data — right in your browser</p>
+
+      <form action="/start" method="POST" class="welcome-form">
+
+        <div class="form-group">
+          <label for="name">What's your name?</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+            required
+            autocomplete="off"
+            maxlength="50"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>How many tables do you want to work with?</label>
+          <div class="table-selector">
+            {% set table_info = [
+              (1, 'users', 'Basic SELECT, filtering, aggregates on one table'),
+              (2, 'users + orders', 'JOIN between users and orders becomes available'),
+              (3, 'users + orders + products', 'Full 3-table JOINs'),
+              (4, '+ returns', 'Return data — new JOIN scenarios'),
+              (5, '+ service_requests', 'All 5 tables — maximum level')
+            ] %}
+            {% for count, tables, desc in table_info %}
+            <label class="table-option">
+              <input type="radio" name="table_count" value="{{ count }}" {% if count == 2 %}checked{% endif %} />
+              <div class="table-option-card">
+                <div class="table-option-header">
+                  <span class="table-count">{{ count }}</span>
+                  <span class="table-names">{{ tables }}</span>
+                </div>
+                <div class="table-option-desc">{{ desc }}</div>
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <button type="submit" class="btn-start">Start Training →</button>
+      </form>
+    </div>
+
+    <!-- ── RIGHT: what you'll practice ─────────── -->
+    <div class="info-panel">
+      <h2 class="info-title">What you'll practice</h2>
+      <p class="info-subtitle">90 exercises covering all core SQL operators</p>
+
+      <div class="info-list">
+        <div class="info-item">
+          <div class="info-item-title">Basic Selection</div>
+          <div class="info-item-ops"><code>SELECT</code> <code>FROM</code> <code>WHERE</code> <code>ORDER BY ASC/DESC</code> <code>LIMIT</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Filtering</div>
+          <div class="info-item-ops"><code>AND</code> <code>OR</code> <code>IN</code> <code>NOT IN</code> <code>LIKE</code> <code>NOT LIKE</code> <code>BETWEEN</code> <code>NOT BETWEEN</code> <code>IS NULL</code> <code>IS NOT NULL</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Aggregate Functions</div>
+          <div class="info-item-ops"><code>COUNT(*)</code> <code>COUNT(DISTINCT)</code> <code>SUM()</code> <code>AVG()</code> <code>MIN()</code> <code>MAX()</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Grouping</div>
+          <div class="info-item-ops"><code>GROUP BY</code> <code>HAVING</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Joining Tables</div>
+          <div class="info-item-ops"><code>JOIN</code> — only matching rows &nbsp;|&nbsp; <code>LEFT JOIN</code> — all rows from left table</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Functions</div>
+          <div class="info-item-ops"><code>ROUND()</code> <code>COALESCE()</code> <code>LOWER()</code> <code>|| (concatenation)</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Conditional Expressions</div>
+          <div class="info-item-ops"><code>CASE WHEN ... THEN ... ELSE ... END</code></div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Subqueries</div>
+          <div class="info-item-ops">SELECT inside SELECT — inner query result is passed to the outer query</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-title">Data Modification</div>
+          <div class="info-item-ops"><code>INSERT INTO ... VALUES</code> &nbsp;|&nbsp; <code>UPDATE ... SET ... WHERE</code> &nbsp;|&nbsp; <code>DELETE FROM ... WHERE</code></div>
+        </div>
+        <div class="info-item info-item-order">
+          <div class="info-item-title">Query Clause Order</div>
+          <div class="info-item-order-chain">
+            <span>SELECT</span><span class="arrow">→</span>
+            <span>FROM</span><span class="arrow">→</span>
+            <span>JOIN</span><span class="arrow">→</span>
+            <span>WHERE</span><span class="arrow">→</span>
+            <span>GROUP BY</span><span class="arrow">→</span>
+            <span>HAVING</span><span class="arrow">→</span>
+            <span>ORDER BY</span><span class="arrow">→</span>
+            <span>LIMIT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- .welcome-wrap -->
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
