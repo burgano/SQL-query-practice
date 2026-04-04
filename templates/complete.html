@@ -28,6 +28,14 @@
         <div class="stat-num">{{ score.revealed }}</div>
         <div class="stat-label">Revealed</div>
       </div>
+      <div class="stat-block stat-red">
+        <div class="stat-num">{{ score.skipped or 0 }}</div>
+        <div class="stat-label">Skipped</div>
+      </div>
+      <div class="stat-block stat-red">
+        <div class="stat-num">{{ score.errors or 0 }}</div>
+        <div class="stat-label">Errors</div>
+      </div>
     </div>
 
     <a href="/" class="btn-start" style="display:inline-block;text-decoration:none;margin-top:2rem;">
