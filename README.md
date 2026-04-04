@@ -1,10 +1,14 @@
 # SQL Query Practice Trainer
 
-Интерактивный тренажёр SQL-запросов в браузере. Запускается локально одной командой.
+An interactive SQL trainer that runs locally in your browser. Practice real queries on a real database — no cloud, no sign-up.
 
-## Быстрый старт
+![Welcome page](assets/screenshot-welcome.png)
 
-**Требования:** Python 3.8+ ([python.org](https://www.python.org/downloads/))
+![Trainer page](assets/screenshot-trainer.png)
+
+## Quick Start
+
+**Requirements:** Python 3.8+ ([python.org](https://www.python.org/downloads/))
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/sql-query-practice.git
@@ -21,71 +25,82 @@ bash run.sh
 run.bat
 ```
 
-Скрипт автоматически создаст виртуальное окружение, установит зависимости и запустит сервер.
+The script automatically creates a virtual environment, installs dependencies, and starts the server. The browser will open at `http://127.0.0.1:5000`.
 
-Браузер откроется автоматически на `http://127.0.0.1:5000`
+To stop the server — click the **■ Stop server** button on any page of the app.
 
-Чтобы остановить сервер — нажми кнопку **■ Stop server** на любой странице приложения. После этого можно закрыть вкладку.
-
-> **Ошибка "Port 5000 is in use"?**
-> Останови процесс, который занимает порт:
+> **"Port 5000 is in use" error?**
+> Kill the process occupying the port:
 > ```bash
 > # macOS / Linux
 > lsof -ti:5000 | xargs kill -9
 >
 > # Windows
 > netstat -ano | findstr :5000
-> taskkill /PID <номер_из_предыдущей_команды> /F
+> taskkill /PID <PID_from_above> /F
 > ```
-> Если порт занимает AirPlay Receiver — отключи его: **System Settings → General → AirDrop & Handoff → AirPlay Receiver → выключить**.
+> On macOS, port 5000 may be used by AirPlay Receiver — disable it in **System Settings → General → AirDrop & Handoff → AirPlay Receiver**.
 
-## Что внутри
+## What's Inside
 
-**5 связанных таблиц** с реалистичными данными:
+**5 related tables** with realistic data:
 
-| # | Таблица | Описание |
-|---|---------|----------|
-| 1 | `users` | 25 пользователей из разных городов |
-| 2 | `orders` | 40 заказов, ссылаются на users |
-| 3 | `products` | 20 товаров по категориям |
-| 4 | `returns` | 12 возвратов, ссылаются на orders |
-| 5 | `service_requests` | 18 обращений в поддержку |
+| # | Table | Description |
+|---|-------|-------------|
+| 1 | `users` | 25 users from different cities |
+| 2 | `orders` | 40 orders referencing users |
+| 3 | `products` | 20 products across categories |
+| 4 | `returns` | 12 returns referencing orders |
+| 5 | `service_requests` | 18 support tickets |
 
-**90 заданий** по всем основным операторам SQL:
+**130 exercises** across all core SQL topics:
 
-- `SELECT / WHERE / ORDER BY / LIMIT` — 10 заданий
-- Фильтрация: `AND / OR / IN / NOT IN / LIKE / BETWEEN / IS NULL` — 10
-- Агрегаты: `COUNT / SUM / AVG / MIN / MAX` — 10
+- `SELECT / WHERE / ORDER BY / LIMIT` — 10 exercises
+- Filtering: `AND / OR / IN / NOT IN / LIKE / BETWEEN / IS NULL` — 10
+- Aggregates: `COUNT / SUM / AVG / MIN / MAX` — 10
 - `GROUP BY / HAVING` — 10
 - `JOIN / LEFT JOIN` — 10
-- Функции: `ROUND / COALESCE / LOWER / ||` — 10
+- Functions: `ROUND / COALESCE / LOWER / ||` — 10
 - `CASE WHEN` — 10
-- Подзапросы — 10
+- Subqueries — 10
 - `INSERT / UPDATE / DELETE` — 10
+- Extended JOINs (triple, quadruple, quintuple table joins) — 40
 
-## Как работает
+## Features
 
-1. На стартовой странице вводишь имя и выбираешь количество таблиц (1–5)
-2. Таблицы с данными зафиксированы в верхней части экрана
-3. Под ними — задание и поле для ввода SQL с подсветкой синтаксиса
-4. Нажимаешь «Проверить результат» — сравниваются реальные результаты запросов
-5. Если ответ неверный — можно посмотреть правильный ответ
-6. Для DML-заданий (INSERT/UPDATE/DELETE) данные автоматически сбрасываются перед каждой проверкой
+- **SQL dialect selector** — SQLite, MySQL, or PostgreSQL syntax
+- **Exercise order** — sequential (simple → complex) or random
+- **Table count** — choose 1–5 tables to control exercise difficulty
+- **Hint system** — category hint hidden behind a toggle button
+- **Reveal answer** — show the correct solution on demand
+- **Answer checking** — compares actual query results, not strings
+- **DML exercises** — data is automatically reset before each INSERT/UPDATE/DELETE check
 
-## Стек
+## How It Works
 
-- **Python 3.8+** + **Flask** — веб-сервер
-- **SQLite** — встроенная БД, не требует установки
-- **CodeMirror** — подсветка SQL в редакторе
-- Vanilla JS + CSS — без фреймворков
+1. Enter your name, choose SQL dialect, exercise order, and number of tables
+2. Table data is shown in a sticky panel at the top
+3. Write your SQL query in the editor with syntax highlighting
+4. Click **Check Result** — your query runs against the real database and results are compared
+5. Correct answer → confetti + auto-advance to the next exercise in 1 second
 
-## Структура проекта
+## Stack
+
+- **Python 3.8+** + **Flask** — web server
+- **SQLite** — embedded database, no installation needed
+- **CodeMirror** — SQL syntax highlighting in the editor
+- Vanilla JS + CSS — no frontend frameworks
+
+## Project Structure
 
 ```
 sql-query-practice/
-├── app.py          # Flask маршруты и логика проверки
-├── database.py     # Схема БД и генерация данных
-├── exercises.py    # 90 заданий с решениями
+├── app.py          # Flask routes and answer-checking logic
+├── database.py     # Database schema and seed data
+├── exercises.py    # 130 exercises with solutions
+├── run.sh          # One-command startup (macOS / Linux)
+├── run.bat         # One-command startup (Windows)
+├── assets/         # Screenshots for README
 ├── static/
 │   ├── style.css
 │   └── script.js
