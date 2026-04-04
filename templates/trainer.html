@@ -100,7 +100,7 @@
 
       <!-- SQL editor -->
       <div class="editor-wrap">
-        <textarea id="sqlEditor" placeholder="-- Write your SQL query here&#10;-- Press Ctrl+Enter (or Cmd+Enter) to check"></textarea>
+        <textarea id="sqlEditor" placeholder="-- Write your SQL query here&#10;-- Press Ctrl+Enter to check"></textarea>
       </div>
 
       <!-- Buttons row -->
@@ -161,7 +161,15 @@
       indentWithTabs: false,
       smartIndent: true,
       lineWrapping: true,
-      extraKeys: { 'Ctrl-Enter': checkAnswer, 'Cmd-Enter': checkAnswer },
+      extraKeys: { 'Ctrl-Enter': checkAnswer, 'Cmd-Enter': checkAnswer, 'Mod-Enter': checkAnswer },
+    });
+
+    // Global shortcut fallback
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        checkAnswer();
+      }
     });
 
     // Read-only answer editor
