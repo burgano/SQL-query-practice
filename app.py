@@ -1,3 +1,4 @@
+import random
 import sqlite3
 import threading
 import webbrowser
@@ -31,18 +32,25 @@ def start():
     dialect = request.form.get('dialect', 'sqlite')
     if dialect not in ('sqlite', 'mysql', 'postgresql'):
         dialect = 'sqlite'
+    order_mode = request.form.get('order_mode', 'sequential')
+    if order_mode not in ('sequential', 'random'):
+        order_mode = 'sequential'
 
     if not name:
         return redirect(url_for('welcome'))
 
     available = get_exercises_for_tables(table_count)
+    exercise_ids = [e['id'] for e in available]
+    if order_mode == 'random':
+        random.shuffle(exercise_ids)
 
     session.clear()
     session['name'] = name
     session['table_count'] = table_count
     session['dialect'] = dialect
+    session['order_mode'] = order_mode
     session['exercise_index'] = 0
-    session['exercise_ids'] = [e['id'] for e in available]
+    session['exercise_ids'] = exercise_ids
     session['score'] = {'correct': 0, 'total': 0, 'revealed': 0}
 
     init_db()

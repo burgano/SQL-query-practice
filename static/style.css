@@ -47,7 +47,7 @@ html, body {
 .welcome-wrap {
   display: flex;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: stretch;
   max-width: 1100px;
   width: 100%;
 }
@@ -150,6 +150,31 @@ h1 {
 }
 .table-names { font-weight: 600; color: var(--accent); font-size: 0.85rem; }
 .table-option-desc { font-size: 0.76rem; color: var(--text-dim); padding-left: 2.1rem; }
+
+/* Order toggle */
+.order-toggle { display: flex; gap: 0.5rem; }
+
+.order-option { display: block; cursor: pointer; flex: 1; }
+.order-option input[type="radio"] { display: none; }
+
+.order-option-card {
+  display: block;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.order-option input[type="radio"]:checked + .order-option-card {
+  border-color: var(--accent);
+  background: rgba(79, 195, 247, 0.07);
+}
+.order-option input[type="radio"]:checked + .order-option-card .order-name { color: var(--accent); }
+.order-option:hover .order-option-card { border-color: var(--accent2); }
+.order-name { display: block; font-weight: 700; font-size: 0.85rem; color: var(--text-dim); }
+.order-option input[type="radio"]:checked + .order-option-card .order-name { color: var(--accent); }
+.order-desc { display: block; font-size: 0.72rem; color: var(--text-dim); margin-top: 0.1rem; }
 
 /* Dialect selector */
 .dialect-selector { display: flex; gap: 0.5rem; }
