@@ -1,6 +1,6 @@
 # SQL Query Practice Trainer
 
-An interactive SQL trainer that runs locally in your browser. Practice real queries on a real database — no cloud, no sign-up.
+A local SQL trainer that runs in your browser. Practice real queries on a real database, no sign-up, no cloud.
 
 ![Welcome page](assets/screenshot-welcome.png)
 
@@ -8,10 +8,10 @@ An interactive SQL trainer that runs locally in your browser. Practice real quer
 
 ## Quick Start
 
-**Requirements:** Python 3.8+ ([python.org](https://www.python.org/downloads/))
+You need Python 3.8+ installed: [python.org](https://www.python.org/downloads/)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/sql-query-practice.git
+git clone https://github.com/burgano/SQL-query-practice.git
 cd sql-query-practice
 ```
 
@@ -25,82 +25,71 @@ bash run.sh
 run.bat
 ```
 
-The script automatically creates a virtual environment, installs dependencies, and starts the server. The browser will open at `http://127.0.0.1:5000`.
+The script creates a virtual environment, installs dependencies and starts the server. Browser will open at `http://127.0.0.1:5000`.
 
-To stop the server — click the **■ Stop server** button on any page of the app.
+To stop the server use the **Stop server** button inside the app.
 
 > **"Port 5000 is in use" error?**
-> Kill the process occupying the port:
+> Kill the process on that port:
 > ```bash
 > # macOS / Linux
 > lsof -ti:5000 | xargs kill -9
 >
 > # Windows
 > netstat -ano | findstr :5000
-> taskkill /PID <PID_from_above> /F
+> taskkill /PID <PID> /F
 > ```
-> On macOS, port 5000 may be used by AirPlay Receiver — disable it in **System Settings → General → AirDrop & Handoff → AirPlay Receiver**.
+> On macOS port 5000 can be taken by AirPlay Receiver. Disable it in System Settings > General > AirDrop & Handoff > AirPlay Receiver.
 
 ## What's Inside
 
-**5 related tables** with realistic data:
+5 related tables with realistic data:
 
 | # | Table | Description |
 |---|-------|-------------|
 | 1 | `users` | 25 users from different cities |
-| 2 | `orders` | 40 orders referencing users |
-| 3 | `products` | 20 products across categories |
-| 4 | `returns` | 12 returns referencing orders |
+| 2 | `orders` | 40 orders |
+| 3 | `products` | 20 products |
+| 4 | `returns` | 12 returns |
 | 5 | `service_requests` | 18 support tickets |
 
-**130 exercises** across all core SQL topics:
+130 exercises covering:
 
-- `SELECT / WHERE / ORDER BY / LIMIT` — 10 exercises
-- Filtering: `AND / OR / IN / NOT IN / LIKE / BETWEEN / IS NULL` — 10
-- Aggregates: `COUNT / SUM / AVG / MIN / MAX` — 10
-- `GROUP BY / HAVING` — 10
-- `JOIN / LEFT JOIN` — 10
-- Functions: `ROUND / COALESCE / LOWER / ||` — 10
-- `CASE WHEN` — 10
-- Subqueries — 10
-- `INSERT / UPDATE / DELETE` — 10
-- Extended JOINs (triple, quadruple, quintuple table joins) — 40
+- `SELECT / WHERE / ORDER BY / LIMIT`
+- `AND / OR / IN / NOT IN / LIKE / BETWEEN / IS NULL`
+- `COUNT / SUM / AVG / MIN / MAX`
+- `GROUP BY / HAVING`
+- `JOIN / LEFT JOIN`
+- `ROUND / COALESCE / LOWER / concatenation`
+- `CASE WHEN`
+- Subqueries
+- `INSERT / UPDATE / DELETE`
+- Multi-table JOINs (3, 4, 5 tables)
 
 ## Features
 
-- **SQL dialect selector** — SQLite, MySQL, or PostgreSQL syntax
-- **Exercise order** — sequential (simple → complex) or random
-- **Table count** — choose 1–5 tables to control exercise difficulty
-- **Hint system** — category hint hidden behind a toggle button
-- **Reveal answer** — show the correct solution on demand
-- **Answer checking** — compares actual query results, not strings
-- **DML exercises** — data is automatically reset before each INSERT/UPDATE/DELETE check
-
-## How It Works
-
-1. Enter your name, choose SQL dialect, exercise order, and number of tables
-2. Table data is shown in a sticky panel at the top
-3. Write your SQL query in the editor with syntax highlighting
-4. Click **Check Result** — your query runs against the real database and results are compared
-5. Correct answer → confetti + auto-advance to the next exercise in 1 second
+- Choose SQL dialect: SQLite, MySQL or PostgreSQL
+- Sequential or random exercise order
+- 1 to 5 tables depending on what you want to practice
+- Hint system hidden behind a button
+- Reveal answer on demand
+- Answer checked by comparing actual query results, not strings
+- DML exercises reset the data before each check
 
 ## Stack
 
-- **Python 3.8+** + **Flask** — web server
-- **SQLite** — embedded database, no installation needed
-- **CodeMirror** — SQL syntax highlighting in the editor
-- Vanilla JS + CSS — no frontend frameworks
+Python 3.8+ / Flask / SQLite / CodeMirror / Vanilla JS
 
 ## Project Structure
 
 ```
 sql-query-practice/
-├── app.py          # Flask routes and answer-checking logic
-├── database.py     # Database schema and seed data
-├── exercises.py    # 130 exercises with solutions
-├── run.sh          # One-command startup (macOS / Linux)
-├── run.bat         # One-command startup (Windows)
-├── assets/         # Screenshots for README
+├── app.py
+├── database.py
+├── exercises.py
+├── run.sh
+├── run.bat
+├── assets/
 ├── static/
 │   ├── style.css
 │   └── script.js

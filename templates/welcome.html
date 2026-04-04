@@ -18,7 +18,7 @@
         <span class="logo-bracket">}</span>
       </div>
       <h1>SQL Trainer</h1>
-      <p class="subtitle">Practice SQL queries on real data — right in your browser</p>
+      <p class="subtitle">Practice SQL queries on real data, right in your browser</p>
 
       <form action="/start" method="POST" class="welcome-form">
 
@@ -84,10 +84,10 @@
           <div class="table-selector">
             {% set table_info = [
               (1, 'users', 'Basic SELECT, filtering, aggregates on one table'),
-              (2, 'users + orders', 'JOIN between users and orders becomes available'),
+              (2, 'users + orders', 'adds JOIN between users and orders'),
               (3, 'users + orders + products', 'Full 3-table JOINs'),
-              (4, '+ returns', 'Return data — new JOIN scenarios'),
-              (5, '+ service_requests', 'All 5 tables — maximum level')
+              (4, '+ returns', 'adds return data and more JOIN options'),
+              (5, '+ service_requests', 'all 5 tables')
             ] %}
             {% for count, tables, desc in table_info %}
             <label class="table-option">
@@ -133,7 +133,7 @@
         </div>
         <div class="info-item">
           <div class="info-item-title">Joining Tables</div>
-          <div class="info-item-ops"><code>JOIN</code> — only matching rows &nbsp;|&nbsp; <code>LEFT JOIN</code> — all rows from left table</div>
+          <div class="info-item-ops"><code>JOIN</code> only matching rows &nbsp;|&nbsp; <code>LEFT JOIN</code> all rows from left table</div>
         </div>
         <div class="info-item">
           <div class="info-item-title">Functions</div>
@@ -145,7 +145,7 @@
         </div>
         <div class="info-item">
           <div class="info-item-title">Subqueries</div>
-          <div class="info-item-ops">SELECT inside SELECT — inner query result is passed to the outer query</div>
+          <div class="info-item-ops">SELECT inside SELECT, result of inner query goes into outer query</div>
         </div>
         <div class="info-item">
           <div class="info-item-title">Data Modification</div>
