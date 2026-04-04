@@ -183,6 +183,7 @@ async function nextExercise(skipped = false) {
 
 // ── Skip ──────────────────────────────────────────────
 function skipExercise() {
+  incrementCounter('.score-skipped');
   nextExercise(true);
 }
 
