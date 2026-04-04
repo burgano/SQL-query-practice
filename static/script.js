@@ -65,11 +65,11 @@ async function checkAnswer() {
       body: JSON.stringify({ query, exercise_id: EXERCISE_ID }),
     });
     const data = await res.json();
+    setLoading(false);
     showResult(data);
   } catch (e) {
-    showResult({ correct: false, error: 'Connection error' });
-  } finally {
     setLoading(false);
+    showResult({ correct: false, error: 'Connection error' });
   }
 }
 
@@ -94,6 +94,11 @@ function showResult(data) {
     document.getElementById('successText').textContent = getCompliment(USER_NAME);
     success.classList.remove('hidden');
     confetti();
+    // Disable Check Result and auto-advance after 1 s
+    const btnCheck = document.getElementById('btnCheck');
+    btnCheck.disabled = true;
+    btnCheck.textContent = 'Next in 1s…';
+    setTimeout(nextExercise, 1000);
   } else {
     errBlock.classList.remove('hidden');
   }

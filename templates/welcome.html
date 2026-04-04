@@ -91,7 +91,7 @@
     <!-- ── RIGHT: what you'll practice ─────────── -->
     <div class="info-panel">
       <h2 class="info-title">What you'll practice</h2>
-      <p class="info-subtitle">90 exercises covering all core SQL operators</p>
+      <p class="info-subtitle"><span id="exerciseCount">{{ exercise_counts[2] }}</span> exercises covering all core SQL operators</p>
 
       <div class="info-list">
         <div class="info-item">
@@ -149,5 +149,13 @@
   </div><!-- .welcome-wrap -->
 
   <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    const EXERCISE_COUNTS = {{ exercise_counts | tojson }};
+    document.querySelectorAll('input[name="table_count"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.getElementById('exerciseCount').textContent = EXERCISE_COUNTS[radio.value];
+      });
+    });
+  </script>
 </body>
 </html>

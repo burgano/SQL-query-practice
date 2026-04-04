@@ -17,7 +17,8 @@ app.secret_key = 'sql-trainer-2024-xK9pL'
 
 @app.route('/')
 def welcome():
-    return render_template('welcome.html')
+    counts = {i: len(get_exercises_for_tables(i)) for i in range(1, 6)}
+    return render_template('welcome.html', exercise_counts=counts)
 
 
 @app.route('/start', methods=['POST'])
@@ -103,9 +104,13 @@ def check():
     result = _check_answer(user_query, exercise)
 
     if result.get('correct'):
-        score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
-        score['correct'] += 1
-        session['score'] = score
+        scored_ids = set(session.get('scored_ids', []))
+        if exercise_id not in scored_ids:
+            score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
+            score['correct'] += 1
+            session['score'] = score
+            scored_ids.add(exercise_id)
+            session['scored_ids'] = list(scored_ids)
         session.modified = True
 
     return jsonify(result)
