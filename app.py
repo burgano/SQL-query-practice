@@ -27,6 +27,9 @@ def start():
         table_count = max(1, min(5, int(request.form.get('table_count', 1))))
     except ValueError:
         table_count = 1
+    dialect = request.form.get('dialect', 'sqlite')
+    if dialect not in ('sqlite', 'mysql', 'postgresql'):
+        dialect = 'sqlite'
 
     if not name:
         return redirect(url_for('welcome'))
@@ -36,6 +39,7 @@ def start():
     session.clear()
     session['name'] = name
     session['table_count'] = table_count
+    session['dialect'] = dialect
     session['exercise_index'] = 0
     session['exercise_ids'] = [e['id'] for e in available]
     session['score'] = {'correct': 0, 'total': 0, 'revealed': 0}
@@ -51,6 +55,7 @@ def trainer():
 
     name = session['name']
     table_count = session['table_count']
+    dialect = session.get('dialect', 'sqlite')
     idx = session.get('exercise_index', 0)
     exercise_ids = session.get('exercise_ids', [])
     score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
@@ -58,7 +63,7 @@ def trainer():
     if idx >= len(exercise_ids):
         return render_template('complete.html', name=name, score=score, total=len(exercise_ids))
 
-    exercise = EXERCISES[exercise_ids[idx]]
+    exercise = _apply_dialect(EXERCISES[exercise_ids[idx]], dialect)
 
     # Refresh DB before DML exercises so each attempt starts clean
     if exercise.get('needs_reset', False):
@@ -70,6 +75,7 @@ def trainer():
         'trainer.html',
         name=name,
         table_count=table_count,
+        dialect=dialect,
         tables_data=tables_data,
         exercise=exercise,
         exercise_index=idx + 1,
@@ -92,7 +98,8 @@ def check():
     if exercise_id not in EXERCISES:
         return jsonify({'correct': False, 'error': 'Invalid exercise ID'})
 
-    exercise = EXERCISES[exercise_id]
+    dialect = session.get('dialect', 'sqlite')
+    exercise = _apply_dialect(EXERCISES[exercise_id], dialect)
     result = _check_answer(user_query, exercise)
 
     if result.get('correct'):
@@ -123,7 +130,8 @@ def show_answer():
     if exercise_id not in EXERCISES:
         return jsonify({'error': 'Invalid exercise'}), 400
 
-    exercise = EXERCISES[exercise_id]
+    dialect = session.get('dialect', 'sqlite')
+    exercise = _apply_dialect(EXERCISES[exercise_id], dialect)
     if exercise.get('needs_reset', False):
         reset_db()
 
@@ -144,6 +152,17 @@ def reset_database():
 # ──────────────────────────────────────────────
 # Answer checking logic
 # ──────────────────────────────────────────────
+
+def _apply_dialect(exercise: dict, dialect: str) -> dict:
+    """Return exercise with dialect-specific solution/hint merged in."""
+    variants = exercise.get('dialect_variants', {})
+    variant = variants.get(dialect)
+    if not variant:
+        return exercise
+    merged = dict(exercise)
+    merged.update(variant)
+    return merged
+
 
 _DANGEROUS = ['DROP ', 'TRUNCATE ', 'PRAGMA ', 'ATTACH ', 'DETACH ',
               'CREATE TABLE', 'ALTER TABLE', 'CREATE DATABASE']

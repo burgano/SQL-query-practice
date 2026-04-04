@@ -99,9 +99,31 @@ function showResult(data) {
   }
 }
 
-// ── Show answer ───────────────────────────────────────
+// ── Show / hide answer toggle ─────────────────────────
+let _answerLoaded = false;
+
 async function showAnswer() {
-  const btn = document.getElementById('btnReveal');
+  const btn  = document.getElementById('btnReveal');
+  const zone = document.getElementById('answerZone');
+
+  // If already visible — hide it
+  if (!zone.classList.contains('hidden')) {
+    zone.classList.add('hidden');
+    btn.textContent = '👁 Reveal Answer';
+    return;
+  }
+
+  // If already fetched — just show again
+  if (_answerLoaded) {
+    zone.classList.remove('hidden');
+    setTimeout(() => {
+      answerEditor.refresh();
+      zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 30);
+    btn.textContent = '🙈 Hide Answer';
+    return;
+  }
+
   btn.disabled = true;
   btn.textContent = '👁 Loading...';
 
@@ -113,17 +135,21 @@ async function showAnswer() {
     });
     const data = await res.json();
     if (data.solution) {
-      const zone = document.getElementById('answerZone');
-      zone.classList.remove('hidden');
       answerEditor.setValue(data.solution);
-      answerEditor.refresh();
-      zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      zone.classList.remove('hidden');
+      // CodeMirror needs a tick after element becomes visible to render correctly
+      setTimeout(() => {
+        answerEditor.refresh();
+        zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 30);
+      _answerLoaded = true;
+      btn.textContent = '🙈 Hide Answer';
     }
   } catch (e) {
     console.error('show answer error', e);
+    btn.textContent = '👁 Reveal Answer';
   } finally {
     btn.disabled = false;
-    btn.textContent = '👁 Reveal Answer';
   }
 }
 
