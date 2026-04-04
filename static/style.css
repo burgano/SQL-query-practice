@@ -299,6 +299,21 @@ h1 {
 }
 
 /* Complete stats */
+.complete-quote {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  max-width: 380px;
+  margin: 0.25rem auto 0;
+  line-height: 1.5;
+}
+.complete-quote-author {
+  font-size: 0.78rem;
+  color: var(--accent2);
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+}
+
 .complete-stats {
   display: flex;
   justify-content: center;
@@ -317,6 +332,7 @@ h1 {
 .stat-label { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem; }
 .stat-green .stat-num  { color: var(--success); }
 .stat-yellow .stat-num { color: var(--warning); }
+.stat-red .stat-num    { color: var(--error); }
 
 /* =====================================================
    TRAINER PAGE — Layout
@@ -371,6 +387,8 @@ h1 {
 }
 .score-correct  { color: var(--success); border-color: var(--success); }
 .score-revealed { color: var(--warning); border-color: var(--warning); }
+.score-errors   { color: var(--error);   border-color: var(--error); }
+.score-skipped  { color: var(--text-dim); border-color: var(--text-dim); }
 
 .dialect-badge {
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;

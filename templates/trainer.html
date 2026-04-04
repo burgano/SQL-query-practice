@@ -31,6 +31,8 @@
       <span class="dialect-badge dialect-{{ dialect }}">{{ dialect|upper }}</span>
       <span class="score-item score-correct" title="Correct answers">✓ {{ score.correct }}</span>
       <span class="score-item score-revealed" title="Answers revealed">👁 {{ score.revealed }}</span>
+      <span class="score-item score-errors" title="SQL errors">✗ {{ score.errors }}</span>
+      <span class="score-item score-skipped" title="Skipped">⇥ {{ score.skipped }}</span>
       <a href="/" class="btn-small">← Restart</a>
       <button class="btn-small btn-shutdown" onclick="shutdownServer()">■ Stop server</button>
     </div>

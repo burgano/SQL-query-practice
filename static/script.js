@@ -34,6 +34,14 @@ function getCompliment(name) {
   return `${msg}, ${name}! 🎉`;
 }
 
+// ── Live counter update ───────────────────────────────
+function incrementCounter(selector) {
+  const el = document.querySelector(selector);
+  if (!el) return;
+  const n = parseInt(el.textContent.match(/\d+/)?.[0] || '0');
+  el.textContent = el.textContent.replace(/\d+/, n + 1);
+}
+
 // ── Panel toggle ──────────────────────────────────────
 function togglePanel() {
   const panel     = document.getElementById('tablesPanel');
@@ -87,6 +95,7 @@ function showResult(data) {
   if (data.error) {
     document.getElementById('sqlErrorText').textContent = data.error;
     sqlErrBlock.classList.remove('hidden');
+    if (data.sql_error) incrementCounter('.score-errors');
     return;
   }
 
@@ -94,6 +103,7 @@ function showResult(data) {
     document.getElementById('successText').textContent = getCompliment(USER_NAME);
     success.classList.remove('hidden');
     confetti();
+    incrementCounter('.score-correct');
     // Disable Check Result and auto-advance after 1 s
     const btnCheck = document.getElementById('btnCheck');
     btnCheck.disabled = true;
@@ -148,6 +158,7 @@ async function showAnswer() {
         zone.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 30);
       _answerLoaded = true;
+      incrementCounter('.score-revealed');
       btn.textContent = '🙈 Hide Answer';
     }
   } catch (e) {
@@ -159,16 +170,21 @@ async function showAnswer() {
 }
 
 // ── Next exercise ─────────────────────────────────────
-async function nextExercise() {
+async function nextExercise(skipped = false) {
   try {
-    await fetch('/next', { method: 'POST' });
+    await fetch('/next', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skipped }),
+    });
   } catch (_) {}
   window.location.href = '/trainer';
 }
 
 // ── Skip ──────────────────────────────────────────────
 function skipExercise() {
-  nextExercise();
+  incrementCounter('.score-skipped');
+  nextExercise(true);
 }
 
 // ── Clear editor ──────────────────────────────────────

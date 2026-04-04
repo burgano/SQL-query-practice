@@ -51,7 +51,10 @@ def start():
     session['order_mode'] = order_mode
     session['exercise_index'] = 0
     session['exercise_ids'] = exercise_ids
-    session['score'] = {'correct': 0, 'total': 0, 'revealed': 0}
+    session['stat_correct']  = 0
+    session['stat_revealed'] = 0
+    session['stat_skipped']  = 0
+    session['stat_errors']   = 0
 
     init_db()
     return redirect(url_for('trainer'))
@@ -67,7 +70,12 @@ def trainer():
     dialect = session.get('dialect', 'sqlite')
     idx = session.get('exercise_index', 0)
     exercise_ids = session.get('exercise_ids', [])
-    score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
+    score = {
+        'correct':  session.get('stat_correct', 0),
+        'revealed': session.get('stat_revealed', 0),
+        'skipped':  session.get('stat_skipped', 0),
+        'errors':   session.get('stat_errors', 0),
+    }
 
     if idx >= len(exercise_ids):
         return render_template('complete.html', name=name, score=score, total=len(exercise_ids))
@@ -114,12 +122,12 @@ def check():
     if result.get('correct'):
         scored_ids = set(session.get('scored_ids', []))
         if exercise_id not in scored_ids:
-            score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
-            score['correct'] += 1
-            session['score'] = score
+            session['stat_correct'] = session.get('stat_correct', 0) + 1
             scored_ids.add(exercise_id)
             session['scored_ids'] = list(scored_ids)
-        session.modified = True
+    elif result.get('sql_error'):
+        session['stat_errors'] = session.get('stat_errors', 0) + 1
+    session.modified = True
 
     return jsonify(result)
 
@@ -128,6 +136,9 @@ def check():
 def next_exercise():
     if 'name' not in session:
         return jsonify({'error': 'Session expired'}), 400
+    data = request.get_json(silent=True) or {}
+    if data.get('skipped'):
+        session['stat_skipped'] = session.get('stat_skipped', 0) + 1
     session['exercise_index'] = session.get('exercise_index', 0) + 1
     session.modified = True
     return jsonify({'ok': True})
@@ -148,9 +159,7 @@ def show_answer():
     if exercise.get('needs_reset', False):
         reset_db()
 
-    score = session.get('score', {'correct': 0, 'total': 0, 'revealed': 0})
-    score['revealed'] += 1
-    session['score'] = score
+    session['stat_revealed'] = session.get('stat_revealed', 0) + 1
     session.modified = True
 
     return jsonify({'solution': exercise['solution']})
@@ -226,7 +235,7 @@ def _check_answer(user_query: str, exercise: dict) -> dict:
             return {'correct': correct}
 
     except sqlite3.Error as e:
-        return {'correct': False, 'error': str(e)}
+        return {'correct': False, 'error': str(e), 'sql_error': True}
     finally:
         conn.close()
 
