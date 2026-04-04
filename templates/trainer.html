@@ -83,7 +83,7 @@
       <div class="exercise-header">
 
         {% if exercise.get('needs_reset') %}
-        <span class="dml-badge">⚠ DML — data is reset before each check</span>
+        <span class="dml-badge">⚠ DML: data is reset before each check</span>
         {% endif %}
 
         <!-- Category badge is hidden behind this button -->
@@ -123,7 +123,7 @@
 
         <div id="resultError" class="result-error hidden">
           <span class="result-icon">✗</span>
-          <span class="result-text">Incorrect — try again or reveal the answer below.</span>
+          <span class="result-text">Incorrect. Try again or reveal the answer.</span>
           <button class="btn-next btn-next-after-error" onclick="nextExercise()">Skip →</button>
         </div>
 

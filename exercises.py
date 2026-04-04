@@ -180,7 +180,7 @@ EXERCISES_LIST = [
         'category': 'Filtering',
         'hint': 'NOT BETWEEN',
         'min_tables': 1,
-        'description': "Select users who registered <b>outside of 2023</b> — not between <code>'2023-01-01'</code> and <code>'2023-12-31'</code>.",
+        'description': "Select users who registered <b>outside of 2023</b>, not between <code>'2023-01-01'</code> and <code>'2023-12-31'</code>.",
         'solution': "SELECT * FROM users WHERE registered_at NOT BETWEEN '2023-01-01' AND '2023-12-31'",
         'check_order': False,
     },
@@ -238,7 +238,7 @@ EXERCISES_LIST = [
         'category': 'Aggregate Functions',
         'hint': 'MIN() / MAX()',
         'min_tables': 1,
-        'description': 'Find the <b>minimum</b> and <b>maximum</b> age among all users — both values in a single query.',
+        'description': 'Find the <b>minimum</b> and <b>maximum</b> age among all users, both values in a single query.',
         'solution': 'SELECT MIN(age), MAX(age) FROM users',
         'check_order': False,
     },
@@ -292,7 +292,7 @@ EXERCISES_LIST = [
         'category': 'Aggregate Functions',
         'hint': 'SUM(expr)',
         'min_tables': 3,
-        'description': 'Calculate the <b>total inventory value</b> — the sum of <b>price × stock</b> across all products.',
+        'description': 'Calculate the <b>total inventory value</b>: sum of <b>price × stock</b> across all products.',
         'solution': 'SELECT SUM(price * stock) FROM products',
         'check_order': False,
     },
@@ -909,7 +909,7 @@ EXERCISES_LIST = [
     },
 
     # =========================================================
-    # CATEGORY 10: JOIN — Extended (2 tables: users + orders)
+    # CATEGORY 10: JOIN - Extended (2 tables: users + orders)
     # =========================================================
     {
         'id': 91,
@@ -1003,7 +1003,7 @@ EXERCISES_LIST = [
     },
 
     # =========================================================
-    # CATEGORY 10: JOIN — Extended (3 tables: + products)
+    # CATEGORY 10: JOIN - Extended (3 tables: + products)
     # =========================================================
     {
         'id': 101,
@@ -1097,7 +1097,7 @@ EXERCISES_LIST = [
     },
 
     # =========================================================
-    # CATEGORY 10: JOIN — Extended (4 tables: + returns)
+    # CATEGORY 10: JOIN - Extended (4 tables: + returns)
     # =========================================================
     {
         'id': 111,
@@ -1167,7 +1167,7 @@ EXERCISES_LIST = [
         'category': 'JOIN / LEFT JOIN',
         'hint': 'JOIN × 4 full chain',
         'min_tables': 4,
-        'description': "Show <b>user name</b>, <b>product name</b>, <b>order total</b>, and <b>return reason</b> — only for orders from users in <b>'London'</b>.",
+        'description': "Show <b>user name</b>, <b>product name</b>, <b>order total</b>, and <b>return reason</b>. Only orders from users in <b>'London'</b>.",
         'solution': "SELECT users.name, products.name, orders.total_price, returns.reason FROM users JOIN orders ON users.id = orders.user_id JOIN products ON orders.product_id = products.id JOIN returns ON orders.id = returns.order_id WHERE users.city = 'London'",
         'check_order': False,
     },
@@ -1185,13 +1185,13 @@ EXERCISES_LIST = [
         'category': 'JOIN / LEFT JOIN',
         'hint': 'JOIN × 4 + category filter',
         'min_tables': 4,
-        'description': "Show <b>product name</b>, <b>category</b>, and the <b>number of times it was returned</b> — only for products in the <b>'Electronics'</b> category.",
+        'description': "Show <b>product name</b>, <b>category</b>, and the <b>number of times it was returned</b>. Only products in the <b>'Electronics'</b> category.",
         'solution': "SELECT products.name, products.category, COUNT(returns.id) AS return_count FROM products LEFT JOIN orders ON products.id = orders.product_id LEFT JOIN returns ON orders.id = returns.order_id WHERE products.category = 'Electronics' GROUP BY products.id, products.name, products.category",
         'check_order': False,
     },
 
     # =========================================================
-    # CATEGORY 10: JOIN — Extended (5 tables: all)
+    # CATEGORY 10: JOIN - Extended (5 tables: all)
     # =========================================================
     {
         'id': 121,
