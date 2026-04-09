@@ -7,9 +7,9 @@
 
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <!-- CodeMirror -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/display/placeholder.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/css/codemirror.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/css/dracula.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/css/placeholder.min.css') }}" />
 
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
@@ -144,9 +144,9 @@
   </main>
 
   <!-- ── SCRIPTS ────────────────────────────────── -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/display/placeholder.min.js"></script>
+  <script src="{{ url_for('static', filename='codemirror/js/codemirror.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='codemirror/js/sql.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='codemirror/js/placeholder.min.js') }}"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script>
 
   <script>

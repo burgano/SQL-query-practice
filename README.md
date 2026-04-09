@@ -8,8 +8,6 @@ A local SQL trainer that runs in your browser. Practice real queries on a real d
 
 ## Quick Start
 
-You need Python 3.8+ installed: [python.org](https://www.python.org/downloads/)
-
 ```bash
 git clone https://github.com/burgano/SQL-query-practice.git
 cd sql-query-practice
@@ -25,21 +23,33 @@ bash run.sh
 run.bat
 ```
 
-The script creates a virtual environment, installs dependencies and starts the server. Browser will open at `http://127.0.0.1:5000`.
+The script sets everything up automatically and opens the browser. No manual installation needed.
 
 To stop the server use the **Stop server** button inside the app.
 
-> **"Port 5000 is in use" error?**
-> Kill the process on that port:
-> ```bash
-> # macOS / Linux
-> lsof -ti:5000 | xargs kill -9
->
-> # Windows
-> netstat -ano | findstr :5000
-> taskkill /PID <PID> /F
-> ```
-> On macOS port 5000 can be taken by AirPlay Receiver. Disable it in System Settings > General > AirDrop & Handoff > AirPlay Receiver.
+---
+
+## Platform notes
+
+### macOS
+- Requires Python 3.8+ — [python.org](https://www.python.org/downloads/)
+- Creates a virtual environment, installs dependencies, starts the server
+- Browser opens automatically at `http://localhost:<port>`
+- Port 5000 may be taken by AirPlay Receiver → the script finds the next free port automatically
+  - To disable AirPlay: System Settings → General → AirDrop & Handoff → AirPlay Receiver → Off
+  - Or specify a port manually: `PORT=8080 bash run.sh`
+
+### Linux (Ubuntu / Debian)
+- Requires Python 3.8+: `sudo apt install python3`
+- `python3-venv` is installed automatically if missing (requires `sudo`)
+- If the project is on an NTFS/exFAT drive (no symlink support), the virtual environment is created in `~/.local/share/sql-query-practice-venv` instead
+- Browser opens automatically via `xdg-open` (requires a desktop environment)
+
+### Windows
+- Python is installed automatically if not found (via winget or direct download from python.org)
+- Virtual environment and dependencies are set up automatically
+- Browser opens automatically
+- Port is selected automatically starting from 5000
 
 ## What's Inside
 
