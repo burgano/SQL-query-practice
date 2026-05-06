@@ -1,7 +1,5 @@
 import random
 import sqlite3
-import threading
-import webbrowser
 
 from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 
@@ -256,11 +254,4 @@ def _compare(user_rows, expected_rows, check_order: bool) -> bool:
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))
-
-    def _open():
-        import time
-        time.sleep(1.2)
-        webbrowser.open(f'http://127.0.0.1:{port}')
-
-    threading.Thread(target=_open, daemon=True).start()
     app.run(debug=False, port=port)
